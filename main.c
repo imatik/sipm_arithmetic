@@ -7,6 +7,10 @@ void eawe(BigInt* num){
     printf("%s","e3awe\n");
 }
 
+void eawe2(BigInt* num){
+    printf("%s","2222e3awe\n");
+}
+
 
 int main() {
     char* name_f1 = "num1.txt";
@@ -16,8 +20,9 @@ int main() {
 
     BigInt_set_listner(num,&listner);
 
-    num->listner->on_event = eawe;
     num->listner->on_event(num);
 
+
+//COMMIT 2.0
     return 0;
 }

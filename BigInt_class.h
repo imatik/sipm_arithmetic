@@ -37,8 +37,24 @@ void BigInt_set_listner(BigInt* num,BigInt_event* listner){
     num->listner = listner;
 }
 
+int* BigInt_char_to_int(BigInt* new_num)
+{
+    int* numer = malloc(sizeof(int)*new_num->SIZE);
+    for (int i=0;i<new_num->SIZE;i++)
+        numer[new_num->SIZE-i-1]=new_num->num[i]-'0';
+    return numer;
+}
 
+void BigInt_int_to_char(int* int_num,BigInt* pnum){
+    for(int i =0;i<pnum->SIZE;i++){
+        pnum->num[pnum->SIZE - i - 1] = int_num[i]+'0';
 
+    }
+    for(int i =0;i<pnum->SIZE;i++){
+        printf("%c",pnum->num[i]);
+    }
+
+}
 
 
 

@@ -32,7 +32,7 @@ char* Freader(const char *filename)
     int i = 0;// iterator
     while((ch = fgetc(file))!=EOF) {
         num[i] = ch;
-        printf("%c",num[i]);
+      //  printf("%c",num[i]);
         i++;
     }
 

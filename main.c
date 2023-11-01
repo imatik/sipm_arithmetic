@@ -20,7 +20,7 @@ int main() {
     BigInt* result = create_bigint(res);
     BigInt_set_listner(result,&listner);
 
-    BigInt_int_to_char(BigInt_plus(num1,num2),result);
+    BigInt_plus(num1,num2,result);
 
     return 0;
 }

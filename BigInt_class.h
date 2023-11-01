@@ -58,7 +58,7 @@ void BigInt_int_to_char(int* int_num,BigInt* pnum){
     }
 }
 
-int* BigInt_plus(BigInt* num1,BigInt* num2){
+void BigInt_plus(BigInt* num1,BigInt* num2,BigInt* res){
     int* int_num1 = BigInt_char_to_int(num1);
     int* int_num2 = BigInt_char_to_int(num2);
 
@@ -66,7 +66,7 @@ int* BigInt_plus(BigInt* num1,BigInt* num2){
     unsigned int max_size = MAX(num1->SIZE,num2->SIZE);
 
     int* int_res = malloc(sizeof (int)*(max_size + 1));
-    //char* res = malloc(sizeof (char)*(max_size + 1));
+
 
 
     for(int i =0; i<min_size;i++){
@@ -84,11 +84,10 @@ int* BigInt_plus(BigInt* num1,BigInt* num2){
                 int_res[i] += (int_res[i] + int_num1[i] + int_num2[i]);
             }
         }
+
     }
 
-
-
-    return int_res;
+    BigInt_int_to_char(int_res,res);
 }
 
 

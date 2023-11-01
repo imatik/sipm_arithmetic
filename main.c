@@ -1,26 +1,18 @@
 #include <stdio.h>
-#include "class.h"
+#include "BigInt_class.h"
 
-struct event_BigInt listner;
+struct event_BigInt listner;// callback функция, для здесь и сейчас
 
-void eawe(BigInt* num){
-    printf("%s","e3awe\n");
-}
 
-void eawe2(BigInt* num){
-    printf("%s","2222e3awe\n");
-}
 
 
 int main() {
-    char* name_f1 = "num1.txt";
-    FILE *file1 = fopen(name_f1,"r");
+    char* name_f1 = "/home/ilya/CLionProjects/Simple_arithmetic/num1.txt";
 
-    BigInt* num = create_bigint();
-
+    BigInt* num = create_bigint(name_f1);
     BigInt_set_listner(num,&listner);
 
-    num->listner->on_event(num);
+
 
 
     return 0;

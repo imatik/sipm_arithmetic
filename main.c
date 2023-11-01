@@ -8,12 +8,19 @@ struct event_BigInt listner;// callback функция, для здесь и с�
 
 int main() {
     char* name_f1 = "num1.txt";
+    char* name_f2 = "num2.txt";
+    char* res = "result.txt";
 
-    BigInt* num = create_bigint(name_f1);
-    BigInt_set_listner(num,&listner);
-    int* numer = BigInt_char_to_int(num);
-    for (int i=0;i<num->SIZE;i++)
-        printf("%u%c",numer[i],' ');
-    BigInt_int_to_char(numer,num);
+    BigInt* num1 = create_bigint(name_f1);
+    BigInt_set_listner(num1,&listner);
+
+    BigInt* num2 = create_bigint(name_f2);
+    BigInt_set_listner(num2,&listner);
+
+    BigInt* result = create_bigint(res);
+    BigInt_set_listner(result,&listner);
+
+    BigInt_int_to_char(BigInt_plus(num1,num2),result);
+
     return 0;
 }

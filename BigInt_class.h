@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include "event_class.h"
 #include "fileworker.h"
+#define MIN(a,b) ((a)<(b)) ? (a) : (b)
+#define MAX(a,b) ((a)>(b)) ? (a) : (b)
 
 typedef struct class_BigInt{
     unsigned int SIZE;
@@ -46,15 +48,49 @@ int* BigInt_char_to_int(BigInt* new_num)
 }
 
 void BigInt_int_to_char(int* int_num,BigInt* pnum){
+
     for(int i =0;i<pnum->SIZE;i++){
         pnum->num[pnum->SIZE - i - 1] = int_num[i]+'0';
 
     }
     for(int i =0;i<pnum->SIZE;i++){
-        printf("%c",pnum->num[i]);
+        //printf("%c",pnum->num[i]);
+    }
+}
+
+int* BigInt_plus(BigInt* num1,BigInt* num2){
+    int* int_num1 = BigInt_char_to_int(num1);
+    int* int_num2 = BigInt_char_to_int(num2);
+
+    unsigned int min_size = MIN(num1->SIZE,num2->SIZE);
+    unsigned int max_size = MAX(num1->SIZE,num2->SIZE);
+
+    int* int_res = malloc(sizeof (int)*(max_size + 1));
+    //char* res = malloc(sizeof (char)*(max_size + 1));
+
+
+    for(int i =0; i<min_size;i++){
+        int_res[i] = 0;
     }
 
+    for(int i =0; i < max_size + 1;i++){
+        if(i<min_size) {
+            if ((int_res[i] + int_num1[i] + int_num2[i]) % 10 > 0) {
+                int_res[i] += (int_res[i] + int_num1[i] + int_num2[i]) % 10;
+                if(i<max_size)
+                    int_res[i + 1]++;
+            } else {
+                printf("%i",int_res[i]);
+                int_res[i] += (int_res[i] + int_num1[i] + int_num2[i]);
+            }
+        }
+    }
+
+
+
+    return int_res;
 }
+
 
 
 

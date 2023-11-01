@@ -11,20 +11,22 @@ typedef struct class_BigInt{
 }BigInt;
 
 BigInt* create_bigint(const char *filename){
+
     BigInt* new_num = malloc(sizeof(BigInt));
     if(new_num == NULL){
         printf("%s","Не удолось выделить память для числа!\n");
         return NULL;
     }
-    printf("%s","Сработал конструктор БигИнта\n");
+    //printf("%s","Сработал конструктор БигИнта\n");
 
+    new_num->SIZE = get_sizeF(filename);
     new_num->num = Freader(filename);
 
     return new_num;
 }
 
 void BigInt_destruct(BigInt* num){
-    printf("%s","Сработал деструктор\n");
+    //printf("%s","Сработал деструктор\n");
     free(num->listner);
     free(num->num);
     free(num);

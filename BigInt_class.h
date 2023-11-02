@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include "event_class.h"
 #include "fileworker.h"
 #define MIN(a,b) ((a)<(b)) ? (a) : (b)
@@ -9,7 +10,7 @@ typedef struct class_BigInt{
     unsigned int SIZE;
     char* num;
     BigInt_event* listner;
-
+    bool positive;
 }BigInt;
 
 BigInt* create_bigint(const char *filename){
@@ -53,7 +54,6 @@ void BigInt_int_to_char(int* int_num,BigInt* pnum){
 
     for(int i =0;i<pnum->SIZE;i++){
         pnum->num[pnum->SIZE - i - 1] = int_num[i]+'0';
-
     }
 
     for(int i =0;i<pnum->SIZE;i++){
@@ -107,7 +107,7 @@ BigInt* BigInt_plus(BigInt* num1,BigInt* num2){
         }
     }
 
-    if(int_res[max_size+1]==0){
+    if(int_res[max_size]==0){
         res->SIZE = max_size;
         int_res = realloc(int_res,max_size);
     }else

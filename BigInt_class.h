@@ -49,16 +49,19 @@ int* BigInt_char_to_int(BigInt* new_num)
 
 void BigInt_int_to_char(int* int_num,BigInt* pnum){
 
+    pnum->num = malloc(sizeof(char)*pnum->SIZE);
+
     for(int i =0;i<pnum->SIZE;i++){
         pnum->num[pnum->SIZE - i - 1] = int_num[i]+'0';
 
     }
+
     for(int i =0;i<pnum->SIZE;i++){
-        //printf("%c",pnum->num[i]);
+        printf("%c",pnum->num[i]);
     }
 }
 
-void BigInt_plus(BigInt* num1,BigInt* num2,BigInt* res){
+BigInt* BigInt_plus(BigInt* num1,BigInt* num2){
     int* int_num1 = BigInt_char_to_int(num1);
     int* int_num2 = BigInt_char_to_int(num2);
 
@@ -66,28 +69,53 @@ void BigInt_plus(BigInt* num1,BigInt* num2,BigInt* res){
     unsigned int max_size = MAX(num1->SIZE,num2->SIZE);
 
     int* int_res = malloc(sizeof (int)*(max_size + 1));
+    BigInt* res = malloc(sizeof (BigInt));
 
 
-
-    for(int i =0; i<min_size;i++){
+    for(int i =0; i<max_size+1;i++){
         int_res[i] = 0;
     }
 
-    for(int i =0; i < max_size + 1;i++){
+    for(int i =0; i < max_size;i++){
         if(i<min_size) {
-            if ((int_res[i] + int_num1[i] + int_num2[i]) % 10 > 0) {
-                int_res[i] += (int_res[i] + int_num1[i] + int_num2[i]) % 10;
-                if(i<max_size)
-                    int_res[i + 1]++;
+            if ((int_res[i] + int_num1[i] + int_num2[i]) / 10 > 0) {
+                int_res[i] = (int_res[i] + int_num1[i] + int_num2[i]) % 10;
+                int_res[i + 1]++;
             } else {
-                printf("%i",int_res[i]);
-                int_res[i] += (int_res[i] + int_num1[i] + int_num2[i]);
+
+                int_res[i] = (int_res[i] + int_num1[i] + int_num2[i]);
+            }
+        }else {
+            if (num1->SIZE > num2->SIZE) {
+                if ((int_res[i] + int_num1[i]) / 10 > 0) {
+                    int_res[i] = (int_res[i] + int_num1[i]) % 10;
+                    int_res[i + 1]++;
+                } else {
+
+                    int_res[i] = (int_res[i] + int_num1[i]);
+                }
+
+            } else {
+                if ((int_res[i] + int_num2[i]) / 10 > 0) {
+                    int_res[i] = (int_res[i] + int_num2[i]) % 10;
+                    int_res[i + 1]++;
+                } else {
+
+                    int_res[i] = (int_res[i] + int_num2[i]);
+                }
             }
         }
-
     }
 
+    if(int_res[max_size+1]==0){
+        res->SIZE = max_size;
+        int_res = realloc(int_res,max_size);
+    }else
+        res->SIZE= max_size + 1;
+
     BigInt_int_to_char(int_res,res);
+
+    return res;
 }
 
 

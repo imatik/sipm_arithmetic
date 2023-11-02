@@ -17,10 +17,9 @@ int main() {
     BigInt* num2 = create_bigint(name_f2);
     BigInt_set_listner(num2,&listner);
 
-    BigInt* result = create_bigint(res);
-    BigInt_set_listner(result,&listner);
+    BigInt* result = BigInt_plus(num1,num2);
 
-    BigInt_plus(num1,num2,result);
+
 
     return 0;
 }

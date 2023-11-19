@@ -13,13 +13,17 @@ int main() {
 
     BigInt* num1 = create_bigint(name_f1);
     BigInt_set_listner(num1,&listner);
+    printf("%s\n",num1->num);
+
 
     BigInt* num2 = create_bigint(name_f2);
     BigInt_set_listner(num2,&listner);
+    printf("%s\n",num2->num);
 
-    BigInt* result = BigInt_plus(num1,num2);
 
+    //BigInt* result = BigInt_plus(num1,num2);
 
+    //BigInt* result2 = BigInt_subtr(num1,num2);
 
     return 0;
 }

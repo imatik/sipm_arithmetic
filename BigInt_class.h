@@ -6,11 +6,18 @@
 #define MIN(a,b) ((a)<(b)) ? (a) : (b)
 #define MAX(a,b) ((a)>(b)) ? (a) : (b)
 
+
+BigInt* BigInt_subtr(const BigInt* num1,const BigInt* num2);
+BigInt* BigInt_plus(const BigInt* num1,const BigInt* num2);
+
+
+
+
 typedef struct class_BigInt{
     unsigned int SIZE;
     char* num;
     BigInt_event* listner;
-    bool positive;
+    bool positive ;
 }BigInt;
 
 BigInt* create_bigint(const char *filename){
@@ -22,8 +29,9 @@ BigInt* create_bigint(const char *filename){
     }
     //printf("%s","Сработал конструктор БигИнта\n");
 
-    new_num->SIZE = get_sizeF(filename);
-    new_num->num = Freader(filename);
+
+    new_num->num = Freader(filename,&new_num->positive,&new_num->SIZE);
+
 
     return new_num;
 }
@@ -61,9 +69,20 @@ void BigInt_int_to_char(int* int_num,BigInt* pnum){
     }
 }
 
-BigInt* BigInt_plus(BigInt* num1,BigInt* num2){
-    int* int_num1 = BigInt_char_to_int(num1);
-    int* int_num2 = BigInt_char_to_int(num2);
+
+//Сложение
+BigInt* BigInt_plus(const BigInt* num1,const BigInt* num2){
+    bool res_positive;
+
+    if(num1->positive!=num2->positive){
+        BigInt* res = BigInt_subtr(num1,num2);
+        return res;
+    }else if(num1->positive == num2->positive && num1->positive == 0)
+        res_positive = 0;
+
+
+    int* i_MAX_NUM = (num1->SIZE > num2->SIZE) ? BigInt_char_to_int(num1):BigInt_char_to_int(num2);
+    int* i_MIN_NUM = (num1->SIZE < num2->SIZE) ? BigInt_char_to_int(num1):BigInt_char_to_int(num2);
 
     unsigned int min_size = MIN(num1->SIZE,num2->SIZE);
     unsigned int max_size = MAX(num1->SIZE,num2->SIZE);
@@ -78,32 +97,23 @@ BigInt* BigInt_plus(BigInt* num1,BigInt* num2){
 
     for(int i =0; i < max_size;i++){
         if(i<min_size) {
-            if ((int_res[i] + int_num1[i] + int_num2[i]) / 10 > 0) {
-                int_res[i] = (int_res[i] + int_num1[i] + int_num2[i]) % 10;
+            if ((int_res[i] + i_MAX_NUM[i] + i_MIN_NUM[i]) / 10 > 0) {
+                int_res[i] = (int_res[i] + i_MAX_NUM[i] + i_MIN_NUM[i]) % 10;
                 int_res[i + 1]++;
             } else {
 
-                int_res[i] = (int_res[i] + int_num1[i] + int_num2[i]);
+                int_res[i] = (int_res[i] + i_MAX_NUM[i] + i_MIN_NUM[i]);
             }
         }else {
-            if (num1->SIZE > num2->SIZE) {
-                if ((int_res[i] + int_num1[i]) / 10 > 0) {
-                    int_res[i] = (int_res[i] + int_num1[i]) % 10;
-                    int_res[i + 1]++;
-                } else {
 
-                    int_res[i] = (int_res[i] + int_num1[i]);
-                }
-
+            if ((int_res[i] + i_MAX_NUM[i]) / 10 > 0) {
+                int_res[i] = (int_res[i] + i_MAX_NUM[i]) % 10;
+                int_res[i + 1]++;
             } else {
-                if ((int_res[i] + int_num2[i]) / 10 > 0) {
-                    int_res[i] = (int_res[i] + int_num2[i]) % 10;
-                    int_res[i + 1]++;
-                } else {
 
-                    int_res[i] = (int_res[i] + int_num2[i]);
-                }
+                int_res[i] = (int_res[i] + i_MAX_NUM[i]);
             }
+
         }
     }
 
@@ -113,7 +123,51 @@ BigInt* BigInt_plus(BigInt* num1,BigInt* num2){
     }else
         res->SIZE= max_size + 1;
 
+    res->positive = res_positive;
+
     BigInt_int_to_char(int_res,res);
+
+    return res;
+}
+
+
+//Вычитание
+BigInt* BigInt_subtr(const BigInt* num1,const BigInt* num2){
+    unsigned int min_size = MIN(num1->SIZE,num2->SIZE);
+    unsigned int max_size = MAX(num1->SIZE,num2->SIZE);
+
+    BigInt* res = malloc(sizeof (BigInt));
+
+    int* i_MAX_NUM = (num1->SIZE > num2->SIZE) ? BigInt_char_to_int(num1):BigInt_char_to_int(num2);
+    int* i_MIN_NUM = (num1->SIZE < num2->SIZE) ? BigInt_char_to_int(num1):BigInt_char_to_int(num2);
+
+
+    for(int i = 0;i<min_size;i++){
+        if(i_MAX_NUM[i] - i_MIN_NUM[i] < 0){
+            int j = 1;
+            while(i_MAX_NUM[i+j] == 0 && i+j<max_size){
+                j++;
+            }
+            i_MAX_NUM[i+j]--;
+            while(j!=1){
+                j--;
+                i_MAX_NUM[i+j] = 9;
+            }
+            i_MAX_NUM[i] += 10;
+            i_MAX_NUM[i] -= i_MIN_NUM[i];
+        }else
+            i_MAX_NUM[i] -= i_MIN_NUM[i];
+    }
+
+    if(i_MAX_NUM[max_size - 1]==0){
+        res->SIZE = max_size-1;
+        i_MAX_NUM = realloc(i_MAX_NUM,max_size-1);
+    }else
+        res->SIZE = max_size;
+
+    res->positive = (num1->SIZE > num2->SIZE) ? num1->positive : num2->positive;
+
+    BigInt_int_to_char(i_MAX_NUM,res);
 
     return res;
 }

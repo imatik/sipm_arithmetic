@@ -82,7 +82,7 @@ BigInt* BigInt_plus(const BigInt* num1,const BigInt* num2){
 
 
     int* i_MAX_NUM = (num1->SIZE > num2->SIZE) ? BigInt_char_to_int(num1):BigInt_char_to_int(num2);
-    int* i_MIN_NUM = (num1->SIZE < num2->SIZE) ? BigInt_char_to_int(num1):BigInt_char_to_int(num2);
+    int* i_MIN_NUM = (num2->SIZE > num1->SIZE) ? BigInt_char_to_int(num2):BigInt_char_to_int(num1);
 
     unsigned int min_size = MIN(num1->SIZE,num2->SIZE);
     unsigned int max_size = MAX(num1->SIZE,num2->SIZE);
@@ -139,7 +139,7 @@ BigInt* BigInt_subtr(const BigInt* num1,const BigInt* num2){
     BigInt* res = malloc(sizeof (BigInt));
 
     int* i_MAX_NUM = (num1->SIZE > num2->SIZE) ? BigInt_char_to_int(num1):BigInt_char_to_int(num2);
-    int* i_MIN_NUM = (num1->SIZE < num2->SIZE) ? BigInt_char_to_int(num1):BigInt_char_to_int(num2);
+    int* i_MIN_NUM = (num2->SIZE > num1->SIZE) ? BigInt_char_to_int(num2):BigInt_char_to_int(num1);
 
 
     for(int i = 0;i<min_size;i++){
@@ -171,8 +171,3 @@ BigInt* BigInt_subtr(const BigInt* num1,const BigInt* num2){
 
     return res;
 }
-
-
-
-
-

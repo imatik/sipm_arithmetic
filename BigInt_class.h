@@ -171,3 +171,10 @@ BigInt* BigInt_subtr(const BigInt* num1,const BigInt* num2){
 
     return res;
 }
+
+void BigInt_display(const BigInt* num){
+
+    for (int i = 0;i<num->SIZE;i++)
+        printf("%c ",num->num[i]);
+    printf("SIZE : %d\nPositive : %d\n",num->SIZE,num->positive);
+}

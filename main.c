@@ -30,7 +30,7 @@ int main() {
 */
 
 //    BigInt* result3 = BigInt_subtr(num1,num2);
-    BigInt* result4 = BigInt_multiplication(num1,num2);
-    BigInt_display(result4);
+    BigInt* result3 = BigInt_multiplication(num1,num2);
+    BigInt_display(result3);
     return 0;
 }

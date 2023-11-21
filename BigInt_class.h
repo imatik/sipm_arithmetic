@@ -12,6 +12,7 @@ BigInt* BigInt_plus(const BigInt* num1,const BigInt* num2);
 BigInt* BigInt_max(const BigInt* num1,const BigInt* num2);
 BigInt* BigInt_min(const BigInt* num1,const BigInt* num2);
 void BigInt_display(const BigInt* num);
+int* resize(int* int_res,const unsigned int* size);
 
 typedef struct class_BigInt{
     unsigned int SIZE;
@@ -63,7 +64,9 @@ void BigInt_int_to_char(int* int_num,BigInt* pnum){
     pnum->num = malloc(sizeof(char)*pnum->SIZE);
 
     for(int i =0;i<pnum->SIZE;i++){
+
         pnum->num[pnum->SIZE - i - 1] = int_num[i]+'0';
+
     }
 
 }
@@ -117,7 +120,7 @@ BigInt* BigInt_plus(const BigInt* num1,const BigInt* num2){
 
     if(int_res[max_size]==0){
         res->SIZE = max_size;
-        int_res = realloc(int_res,max_size);
+        int_res = resize(int_res,&max_size);
     }else
         res->SIZE= max_size + 1;
 
@@ -168,7 +171,7 @@ BigInt* BigInt_subtr(BigInt* num1,BigInt* num2){
 
         if(i_MAX_NUM[num2->SIZE - 1]==0){
             res->SIZE = num2->SIZE-1;
-            i_MAX_NUM = realloc(i_MAX_NUM,num2->SIZE-1);
+            i_MAX_NUM = resize(i_MAX_NUM,&num2->SIZE-1);
         }else
             res->SIZE = num2->SIZE;
 
@@ -207,7 +210,7 @@ BigInt* BigInt_subtr(BigInt* num1,BigInt* num2){
 
         if(i_MAX_NUM[num1->SIZE - 1]==0){
             res->SIZE = num1->SIZE-1;
-            i_MAX_NUM = realloc(i_MAX_NUM,num1->SIZE-1);
+            i_MAX_NUM = resize(i_MAX_NUM,&num1->SIZE-1);
         }else
             res->SIZE = num1->SIZE;
 
@@ -253,7 +256,7 @@ BigInt* BigInt_subtr(BigInt* num1,BigInt* num2){
             res->SIZE = num1->SIZE - i;
         }
 
-        i_MAX_NUM = realloc(i_MAX_NUM, res->SIZE);
+        i_MAX_NUM = resize(i_MAX_NUM, &res->SIZE);
 
         BigInt_int_to_char(i_MAX_NUM,res);
 
@@ -307,15 +310,24 @@ BigInt* BigInt_multiplication(BigInt* num1,BigInt* num2){
         res->positive=true;
     else
         res->positive=false;
-    res->SIZE = min_size+max_size-1;
-//    for(int i =1;int_res[res->SIZE-i]==0;i++) {
-//        res->SIZE-=i;
-//    }
 
-    int_res = realloc(int_res, res->SIZE);
+
+    res->SIZE = min_size+max_size;
+    for(int i =1;int_res[res->SIZE-i]==0;i++) {
+        res->SIZE-=i;
+    }
+
+    int_res = resize(int_res,&res->SIZE);
+
+
     BigInt_int_to_char(int_res,res);
     return res;
 }
+
+
+
+
+
 
 
 
@@ -366,4 +378,12 @@ void BigInt_display(const BigInt* num){
     for (int i = 0;i<num->SIZE;i++)
         printf("%c ",num->num[i]);
     printf("\nSIZE : %d\nPositive : %d\n",num->SIZE,num->positive);
+}
+
+int* resize(int* int_res,const unsigned int* size){
+    int* new_res = malloc(sizeof(int) *(*size));
+    for(int i = 0; i< *size;i++)
+        new_res[i] = int_res[i];
+
+    return new_res;
 }

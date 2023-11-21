@@ -21,11 +21,16 @@ int main() {
 
     //printf("%b", BigInt_max(num1,num2));
 
-    //BigInt* result = BigInt_plus(num1,num2);
-    //BigInt_display(result);
+/*    BigInt* result = BigInt_plus(num1,num2);
+    BigInt_display(result);*/
 
+/*
     BigInt* result2 = BigInt_subtr(num1,num2);
     BigInt_display(result2);
+*/
+
+    BigInt* result3 = BigInt_subtr(num1,num2);
+    BigInt_multiplication(num1,num2);
 
     return 0;
 }

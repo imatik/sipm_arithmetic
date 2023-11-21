@@ -273,6 +273,42 @@ BigInt* BigInt_subtr(BigInt* num1,BigInt* num2){
 
 }
 
+
+BigInt* BigInt_multiplication(BigInt* num1,BigInt* num2){
+
+    BigInt* res = malloc(sizeof(BigInt));
+
+    int* int_res = malloc(sizeof(int)*(num1->SIZE+num2->SIZE));
+
+    for(int i =0; i<num1->SIZE+num2->SIZE;i++){
+        int_res[i] = 0;
+    }
+
+    int* i_MAX_NUM = (num1->SIZE > num2->SIZE) ? BigInt_char_to_int(num1):BigInt_char_to_int(num2);
+    int* i_MIN_NUM = (num2->SIZE < num1->SIZE) ? BigInt_char_to_int(num2):BigInt_char_to_int(num1);
+
+    unsigned int min_size = MIN(num1->SIZE,num2->SIZE);
+    unsigned int max_size = MAX(num1->SIZE,num2->SIZE);
+
+    for(int i = 0;i<min_size;i++)
+        for(int j = 0;j<max_size;j++){
+            if(i_MIN_NUM[i]*i_MAX_NUM[j] > 9) {
+                int_res[j + i + 1] += i_MIN_NUM[i] * i_MAX_NUM[j] / 10;
+                int_res[j + i] += i_MIN_NUM[i] * i_MAX_NUM[j] % 10;
+            }else
+                int_res[j + i] += i_MIN_NUM[i] * i_MAX_NUM[j];
+        }
+
+    for(int i=0;i<num1->SIZE+num2->SIZE;i++)
+        printf("%i ",int_res[i]);
+
+
+    return res;
+}
+
+
+
+
 BigInt* BigInt_max(const BigInt* num1,const BigInt* num2){
     int numer1;
     int numer2;

@@ -11,7 +11,7 @@ BigInt* BigInt_subtr(BigInt* num1,BigInt* num2);
 BigInt* BigInt_plus(const BigInt* num1,const BigInt* num2);
 BigInt* BigInt_max(const BigInt* num1,const BigInt* num2);
 BigInt* BigInt_min(const BigInt* num1,const BigInt* num2);
-
+void BigInt_display(const BigInt* num);
 
 typedef struct class_BigInt{
     unsigned int SIZE;
@@ -53,7 +53,6 @@ int* BigInt_char_to_int(BigInt* new_num)
     int* numer = malloc(sizeof(int)*new_num->SIZE);
     for (int i=0;i<new_num->SIZE;i++){
         numer[new_num->SIZE-i-1]=new_num->num[i]-'0';
-        printf("%i ",numer[new_num->SIZE-i-1]);
     }
     printf("\n");
     return numer;
@@ -299,10 +298,22 @@ BigInt* BigInt_multiplication(BigInt* num1,BigInt* num2){
                 int_res[j + i] += i_MIN_NUM[i] * i_MAX_NUM[j];
         }
 
-    for(int i=0;i<num1->SIZE+num2->SIZE;i++)
-        printf("%i ",int_res[i]);
+    for (int i = 0;i<num1->SIZE+num2->SIZE;i++)
+        if(int_res[i] > 9) {
+            int_res[i + 1]+=int_res[i]/10;
+            int_res[i]%=10;
+        }
+    if (num1->positive==num2->positive)
+        res->positive=true;
+    else
+        res->positive=false;
+    res->SIZE = min_size+max_size-1;
+//    for(int i =1;int_res[res->SIZE-i]==0;i++) {
+//        res->SIZE-=i;
+//    }
 
-
+    int_res = realloc(int_res, res->SIZE);
+    BigInt_int_to_char(int_res,res);
     return res;
 }
 

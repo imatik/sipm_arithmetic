@@ -86,7 +86,7 @@ BigInt* BigInt_plus(BigInt* num1,BigInt* num2){
     }else if(num1->positive== false && num2->positive==true){
         num1->positive=true;
         BigInt* res = BigInt_subtr(num2,num1);
-        num1->positive=true;
+        num1->positive=false;
         return res;
     }else if(num1->positive == num2->positive && num1->positive == 0)
         res_positive = 0;
@@ -150,14 +150,14 @@ BigInt* BigInt_subtr(BigInt* num1,BigInt* num2){
     if(num1->positive==false && num2->positive == true){
         num2->positive = false;// для того что б попасть в if в сложении (80 строчка)
         BigInt* res = BigInt_plus(num1,num2);
-        num2->positive = false;
+        num2->positive = true;
         return res;
     }
 
     if(num1->positive==true && num2->positive == false){
         num2->positive = true;// для того что б попасть в if в сложении
         BigInt* res = BigInt_plus(num1,num2);
-        num2->positive = true;
+        num2->positive = false;
         return res;
     }
 

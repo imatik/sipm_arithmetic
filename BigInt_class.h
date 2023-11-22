@@ -281,7 +281,7 @@ BigInt* BigInt_subtr(BigInt* num1,BigInt* num2){
 
         BigInt_int_to_char(i_MAX_NUM,res);
 
-        if((num1->positive==1 || num1->positive==0) && num1->num == BigInt_max(num1,num2)->num){
+        if((num1->positive==1) && num1->num == BigInt_max(num1,num2)->num){
             res->positive = true;
         }else{
             res->positive = false;
@@ -290,9 +290,6 @@ BigInt* BigInt_subtr(BigInt* num1,BigInt* num2){
 
         return res;
     }
-
-
-
 
 }
 
@@ -347,18 +344,21 @@ BigInt* BigInt_multiplication(BigInt* num1,BigInt* num2){
 }
 
 
-BigInt *BigInt_div(BigInt* num1,BigInt* num2){
+BigInt *BigInt_div(BigInt* num1,    //Делимое
+                   BigInt* num2     //Делитель
+                   ){
 
     BigInt * res = malloc(sizeof (BigInt));
-
     res->SIZE = num1->SIZE-num2->SIZE + 1;
 
     int* res_int = malloc(sizeof(int) * (num1->SIZE-num2->SIZE + 1));
 
+    BigInt* buff_dif = malloc(sizeof (BigInt));
+    buff_dif->SIZE = num2->SIZE;
 
-
-
-
+    //1)Вырезать из num1 в buff_dif массив num2->SIZE размера и засунуть туда числа (Написать функцию вырезания чисел из num1)
+    //2)Сравнение buff_dif и num2(если num2 > buff_dif то записать в рез 0 и добавить ещё один символ в buff_dif) до того момента, умножать num2 пока не num2>buff_dif и взять этот множитель -1 =>множетель записать в результат
+    //3)Продолжить вырезать пока buff_dif/num2 - сможет, если такой возможности нету вернуть в результат 0 , если закончился размер num1 и вырезать нечего возвращаем mod.
 }
 
 
@@ -384,7 +384,7 @@ BigInt* BigInt_max(const BigInt* num1,const BigInt* num2){
             return num2;
         }
     }
-    return num1;
+    return num1;//когда размеры равны
 }
 
 BigInt* BigInt_min(const BigInt* num1,const BigInt* num2){
@@ -405,7 +405,7 @@ BigInt* BigInt_min(const BigInt* num1,const BigInt* num2){
             return num2;
         }
     }
-    return num1;
+    return num1;//когда размеры равны
 }
 
 

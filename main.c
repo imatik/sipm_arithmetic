@@ -19,13 +19,13 @@ int main() {
 
 
 /*    BigInt* result = BigInt_plus(num1,num2);
-    BigInt_display(result);*/
+    BigInt_display(result);
 
-/*    BigInt* result2 = BigInt_subtr(num1,num2);
-    BigInt_display(result2);*/
+    BigInt* result2 = BigInt_subtr(num1,num2);
+    BigInt_display(result2);
 
     BigInt* result3 = BigInt_multiplication(num1,num2);
+    BigInt_display(result3);*/
 
-    BigInt_display(result3);
     return 0;
 }

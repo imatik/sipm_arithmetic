@@ -8,11 +8,12 @@
 
 
 BigInt* BigInt_subtr(BigInt* num1,BigInt* num2);
-BigInt* BigInt_plus(const BigInt* num1,const BigInt* num2);
+BigInt* BigInt_plus(BigInt* num1,BigInt* num2);
+BigInt* BigInt_multiplication(BigInt* num1,BigInt* num2);
 BigInt* BigInt_max(const BigInt* num1,const BigInt* num2);
 BigInt* BigInt_min(const BigInt* num1,const BigInt* num2);
 void BigInt_display(const BigInt* num);
-int* resize(int* int_res,const unsigned int* size);
+int* resize(int* int_res,unsigned int size);
 
 typedef struct class_BigInt{
     unsigned int SIZE;
@@ -55,7 +56,7 @@ int* BigInt_char_to_int(BigInt* new_num)
     for (int i=0;i<new_num->SIZE;i++){
         numer[new_num->SIZE-i-1]=new_num->num[i]-'0';
     }
-    printf("\n");
+
     return numer;
 }
 
@@ -73,18 +74,27 @@ void BigInt_int_to_char(int* int_num,BigInt* pnum){
 
 
 //Сложение
-BigInt* BigInt_plus(const BigInt* num1,const BigInt* num2){
+BigInt* BigInt_plus(BigInt* num1,BigInt* num2){
     bool res_positive;
 
-    if(num1->positive!=num2->positive){
+
+    if(num1->positive== true && num2->positive==false){
+        num2->positive=true;
         BigInt* res = BigInt_subtr(num1,num2);
+        return res;
+    }else if(num1->positive== false && num2->positive==true){
+        num1->positive=true;
+        BigInt* res = BigInt_subtr(num2,num1);
         return res;
     }else if(num1->positive == num2->positive && num1->positive == 0)
         res_positive = 0;
+    else if(num1->positive == num2->positive && num1->positive == 1)
+        res_positive = 1;
 
 
     int* i_MAX_NUM = (num1->SIZE > num2->SIZE) ? BigInt_char_to_int(num1):BigInt_char_to_int(num2);
     int* i_MIN_NUM = (num2->SIZE < num1->SIZE) ? BigInt_char_to_int(num2):BigInt_char_to_int(num1);
+
 
     unsigned int min_size = MIN(num1->SIZE,num2->SIZE);
     unsigned int max_size = MAX(num1->SIZE,num2->SIZE);
@@ -120,7 +130,7 @@ BigInt* BigInt_plus(const BigInt* num1,const BigInt* num2){
 
     if(int_res[max_size]==0){
         res->SIZE = max_size;
-        int_res = resize(int_res,&max_size);
+        int_res = resize(int_res,max_size);
     }else
         res->SIZE= max_size + 1;
 
@@ -171,7 +181,7 @@ BigInt* BigInt_subtr(BigInt* num1,BigInt* num2){
 
         if(i_MAX_NUM[num2->SIZE - 1]==0){
             res->SIZE = num2->SIZE-1;
-            i_MAX_NUM = resize(i_MAX_NUM,&num2->SIZE-1);
+            i_MAX_NUM = resize(i_MAX_NUM,num2->SIZE-1);
         }else
             res->SIZE = num2->SIZE;
 
@@ -202,15 +212,19 @@ BigInt* BigInt_subtr(BigInt* num1,BigInt* num2){
                     j--;
                     i_MAX_NUM[i+j] = 9;
                 }
+
+
                 i_MAX_NUM[i] += 10;
                 i_MAX_NUM[i] -= i_MIN_NUM[i];
+
             }else
                 i_MAX_NUM[i] -= i_MIN_NUM[i];
         }
 
         if(i_MAX_NUM[num1->SIZE - 1]==0){
             res->SIZE = num1->SIZE-1;
-            i_MAX_NUM = resize(i_MAX_NUM,&num1->SIZE-1);
+
+            i_MAX_NUM = resize(i_MAX_NUM,num1->SIZE-1);
         }else
             res->SIZE = num1->SIZE;
 
@@ -253,10 +267,12 @@ BigInt* BigInt_subtr(BigInt* num1,BigInt* num2){
 
 
         for(int i =1;i_MAX_NUM[num1->SIZE - i] ==0;i++) {
+            if(i == num1->SIZE)
+                break;
             res->SIZE = num1->SIZE - i;
         }
 
-        i_MAX_NUM = resize(i_MAX_NUM, &res->SIZE);
+        i_MAX_NUM = resize(i_MAX_NUM, res->SIZE);
 
         BigInt_int_to_char(i_MAX_NUM,res);
 
@@ -277,29 +293,30 @@ BigInt* BigInt_subtr(BigInt* num1,BigInt* num2){
 
 
 BigInt* BigInt_multiplication(BigInt* num1,BigInt* num2){
-
-    BigInt* res = malloc(sizeof(BigInt));
-
-    int* int_res = malloc(sizeof(int)*(num1->SIZE+num2->SIZE));
-
-    for(int i =0; i<num1->SIZE+num2->SIZE;i++){
-        int_res[i] = 0;
-    }
-
     int* i_MAX_NUM = (num1->SIZE > num2->SIZE) ? BigInt_char_to_int(num1):BigInt_char_to_int(num2);
     int* i_MIN_NUM = (num2->SIZE < num1->SIZE) ? BigInt_char_to_int(num2):BigInt_char_to_int(num1);
 
     unsigned int min_size = MIN(num1->SIZE,num2->SIZE);
     unsigned int max_size = MAX(num1->SIZE,num2->SIZE);
 
+    int* int_res = malloc(sizeof(int)*(max_size+min_size));
+    BigInt* res = malloc(sizeof(BigInt));
+
+    for(int i =0; i<max_size+min_size;i++){
+        int_res[i] = 0;
+    }
+
     for(int i = 0;i<min_size;i++)
         for(int j = 0;j<max_size;j++){
-            if(i_MIN_NUM[i]*i_MAX_NUM[j] > 9) {
+            if(i_MIN_NUM[i]*i_MAX_NUM[j] > 9 && j + i + 1<max_size+min_size) {
                 int_res[j + i + 1] += i_MIN_NUM[i] * i_MAX_NUM[j] / 10;
                 int_res[j + i] += i_MIN_NUM[i] * i_MAX_NUM[j] % 10;
             }else
                 int_res[j + i] += i_MIN_NUM[i] * i_MAX_NUM[j];
+
         }
+
+
 
     for (int i = 0;i<num1->SIZE+num2->SIZE;i++)
         if(int_res[i] > 9) {
@@ -311,15 +328,15 @@ BigInt* BigInt_multiplication(BigInt* num1,BigInt* num2){
     else
         res->positive=false;
 
-
     res->SIZE = min_size+max_size;
-    for(int i =1;int_res[res->SIZE-i]==0;i++) {
-        res->SIZE-=i;
+
+    for(int i =1;int_res[min_size+max_size-i]==0;i++) {
+        if(i == min_size+max_size)
+            break;
+        res->SIZE= min_size+max_size - i;
     }
 
-    int_res = resize(int_res,&res->SIZE);
-
-
+    int_res = resize(int_res,res->SIZE);
     BigInt_int_to_char(int_res,res);
     return res;
 }
@@ -380,9 +397,9 @@ void BigInt_display(const BigInt* num){
     printf("\nSIZE : %d\nPositive : %d\n",num->SIZE,num->positive);
 }
 
-int* resize(int* int_res,const unsigned int* size){
-    int* new_res = malloc(sizeof(int) *(*size));
-    for(int i = 0; i< *size;i++)
+int* resize(int* int_res,unsigned int size){
+    int* new_res = malloc(sizeof(int) *(size));
+    for(int i = 0; i< size;i++)
         new_res[i] = int_res[i];
 
     return new_res;

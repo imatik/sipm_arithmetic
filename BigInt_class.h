@@ -266,13 +266,13 @@ BigInt* BigInt_subtr(BigInt* num1,BigInt* num2){
         res->SIZE = BigInt_max(num1,num2)->SIZE;
 
 
-        for(int i =1;i_MAX_NUM[num1->SIZE - i] ==0;i++) {
+/*        for(int i =1;i_MAX_NUM[num1->SIZE - i] ==0;i++) {
             if(i == num1->SIZE)
                 break;
             res->SIZE = num1->SIZE - i;
         }
 
-        i_MAX_NUM = resize(i_MAX_NUM, res->SIZE);
+        i_MAX_NUM = resize(i_MAX_NUM, res->SIZE);*/
 
         BigInt_int_to_char(i_MAX_NUM,res);
 
@@ -342,7 +342,19 @@ BigInt* BigInt_multiplication(BigInt* num1,BigInt* num2){
 }
 
 
+BigInt *BigInt_div(BigInt* num1,BigInt* num2){
 
+    BigInt * res = malloc(sizeof (BigInt));
+
+    res->SIZE = num1->SIZE-num2->SIZE + 1;
+
+    int* res_int = malloc(sizeof(int) * (num1->SIZE-num2->SIZE + 1));
+
+
+
+
+
+}
 
 
 
@@ -367,6 +379,7 @@ BigInt* BigInt_max(const BigInt* num1,const BigInt* num2){
             return num2;
         }
     }
+    return num1;
 }
 
 BigInt* BigInt_min(const BigInt* num1,const BigInt* num2){
@@ -387,14 +400,17 @@ BigInt* BigInt_min(const BigInt* num1,const BigInt* num2){
             return num2;
         }
     }
+    return num1;
 }
 
 
 void BigInt_display(const BigInt* num){
 
+    if(num->positive == false)
+        printf("-");
     for (int i = 0;i<num->SIZE;i++)
-        printf("%c ",num->num[i]);
-    printf("\nSIZE : %d\nPositive : %d\n",num->SIZE,num->positive);
+        printf("%c",num->num[i]);
+    printf("\nSIZE : %d\n",num->SIZE);
 }
 
 int* resize(int* int_res,unsigned int size){

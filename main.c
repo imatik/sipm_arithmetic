@@ -18,16 +18,14 @@ int main() {
     BigInt_set_listner(num2,&listner);
 
 
-    BigInt* result = BigInt_plus(num1,num2);
-    BigInt_display(result);
+/*    BigInt* result = BigInt_plus(num1,num2);
+    BigInt_display(result);*/
 
 /*    BigInt* result2 = BigInt_subtr(num1,num2);
     BigInt_display(result2);*/
 
-//    BigInt* result3 = BigInt_subtr(num1,num2);
+    BigInt* result3 = BigInt_multiplication(num1,num2);
 
-//    BigInt* result3 = BigInt_multiplication(num1,num2);
-//
-//    BigInt_display(result3);
+    BigInt_display(result3);
     return 0;
 }

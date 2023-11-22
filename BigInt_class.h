@@ -81,10 +81,12 @@ BigInt* BigInt_plus(BigInt* num1,BigInt* num2){
     if(num1->positive== true && num2->positive==false){
         num2->positive=true;
         BigInt* res = BigInt_subtr(num1,num2);
+        num2->positive = false;
         return res;
     }else if(num1->positive== false && num2->positive==true){
         num1->positive=true;
         BigInt* res = BigInt_subtr(num2,num1);
+        num1->positive=true;
         return res;
     }else if(num1->positive == num2->positive && num1->positive == 0)
         res_positive = 0;
@@ -147,12 +149,16 @@ BigInt* BigInt_subtr(BigInt* num1,BigInt* num2){
 
     if(num1->positive==false && num2->positive == true){
         num2->positive = false;// для того что б попасть в if в сложении (80 строчка)
-        return BigInt_plus(num1,num2);
+        BigInt* res = BigInt_plus(num1,num2);
+        num2->positive = false;
+        return res;
     }
 
     if(num1->positive==true && num2->positive == false){
         num2->positive = true;// для того что б попасть в if в сложении
-        return BigInt_plus(num1,num2);
+        BigInt* res = BigInt_plus(num1,num2);
+        num2->positive = true;
+        return res;
     }
 
     BigInt* res = malloc(sizeof (BigInt));
@@ -265,14 +271,13 @@ BigInt* BigInt_subtr(BigInt* num1,BigInt* num2){
 
         res->SIZE = BigInt_max(num1,num2)->SIZE;
 
-
-/*        for(int i =1;i_MAX_NUM[num1->SIZE - i] ==0;i++) {
+        for(int i =1;i_MAX_NUM[num1->SIZE - i] ==0;i++) {
             if(i == num1->SIZE)
                 break;
             res->SIZE = num1->SIZE - i;
         }
 
-        i_MAX_NUM = resize(i_MAX_NUM, res->SIZE);*/
+        i_MAX_NUM = resize(i_MAX_NUM, res->SIZE);
 
         BigInt_int_to_char(i_MAX_NUM,res);
 

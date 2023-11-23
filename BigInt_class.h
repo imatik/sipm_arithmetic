@@ -356,7 +356,8 @@ BigInt *BigInt_div(BigInt* num1,    //Делимое
     BigInt* buff_dif = malloc(sizeof (BigInt));
     buff_dif->SIZE = num2->SIZE;
 
-    //1)Вырезать из num1 в buff_dif массив num2->SIZE размера и засунуть туда числа (Написать функцию вырезания чисел из num1)
+    //1)Вырезать из num1 в buff_dif массив num2->SIZE размера и засунуть туда числа (Написать функцию вырезания чисел из num1)+
+
     //2)Сравнение buff_dif и num2(если num2 > buff_dif то записать в рез 0 и добавить ещё один символ в buff_dif) до того момента, умножать num2 пока не num2>buff_dif и взять этот множитель -1 =>множетель записать в результат
     //3)Продолжить вырезать пока buff_dif/num2 - сможет, если такой возможности нету вернуть в результат 0 , если закончился размер num1 и вырезать нечего возвращаем mod.
 }
@@ -424,4 +425,19 @@ int* resize(int* int_res,unsigned int size){
         new_res[i] = int_res[i];
 
     return new_res;
+}
+
+BigInt* cut(BigInt* main_num,unsigned int inx_l,unsigned int inx_r){
+    unsigned int size = inx_r - inx_l;
+    BigInt* new_num = malloc(sizeof(BigInt));
+    new_num->num = malloc(sizeof(char)*size);
+    new_num->SIZE = size;
+
+    int j =0;
+    for(int i = inx_l;i<=inx_r;i++){
+        new_num->num[j]=main_num->num[i];
+        j++;
+    }
+
+    return new_num;
 }

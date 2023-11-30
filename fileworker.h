@@ -36,8 +36,10 @@ char* Freader(const char *filename,bool* positive,unsigned int* SIZE)
 
 char* rEsize(char* int_res,const unsigned int size){
     char* new_res = malloc(sizeof(char) *(size));
-    for(int i = 0; i< size;i++)
+    for(int i = 0; i< size-1;i++) {
         new_res[i] = int_res[i];
+    }
 
+    free(int_res);
     return new_res;
 }

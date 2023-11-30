@@ -12,8 +12,11 @@ BigInt* BigInt_plus(BigInt* num1,BigInt* num2);
 BigInt* BigInt_multiplication(BigInt* num1,BigInt* num2);
 BigInt* BigInt_max(const BigInt* num1,const BigInt* num2);
 BigInt* BigInt_min(const BigInt* num1,const BigInt* num2);
+BigInt* BigInt_copy(const BigInt* num1);
+bool BigInt_greater_equal(const BigInt* num1,const BigInt* num2);
 void BigInt_display(const BigInt* num);
 int* resize(int* int_res,unsigned int size);
+BigInt* cut(BigInt* main_num,unsigned int inx_l,unsigned int inx_r);
 
 typedef struct class_BigInt{
     unsigned int SIZE;
@@ -348,18 +351,83 @@ BigInt *BigInt_div(BigInt* num1,    //Делимое
                    BigInt* num2     //Делитель
                    ){
 
-    BigInt * res = malloc(sizeof (BigInt));
+    bool temp1_positive = num1->positive;
+    bool temp2_positive = num2->positive;
+
+    num1->positive = true;
+    num2->positive = true;
+
+
+    if(num1->SIZE<num2->SIZE){
+        BigInt *res = malloc(sizeof (BigInt));
+        res->num = 0;
+        res->SIZE = 1;
+        res->positive = num1->positive == num2->positive?true:false;
+        return res;
+    }
+
+    BigInt* res = malloc(sizeof (BigInt));
     res->SIZE = num1->SIZE-num2->SIZE + 1;
+    res->num = malloc(sizeof (char)* num1->SIZE-num2->SIZE + 1);
 
-    int* res_int = malloc(sizeof(int) * (num1->SIZE-num2->SIZE + 1));
+    if(temp1_positive == temp2_positive)
+        res->positive = true;
+    else
+        res->positive = false;
 
-    BigInt* buff_dif = malloc(sizeof (BigInt));
-    buff_dif->SIZE = num2->SIZE;
+    for(int i = 0;i<num1->SIZE-num2->SIZE + 1;i++)
+        res->num[i] = '0';
 
-    //1)Вырезать из num1 в buff_dif массив num2->SIZE размера и засунуть туда числа (Написать функцию вырезания чисел из num1)+
+    int j = 0;
+    int inx = 0;
+    int i = 0;
+    BigInt* temp_res;
+    BigInt* buff;
+    BigInt* mod;
 
-    //2)Сравнение buff_dif и num2(если num2 > buff_dif то записать в рез 0 и добавить ещё один символ в buff_dif) до того момента, умножать num2 пока не num2>buff_dif и взять этот множитель -1 =>множетель записать в результат
-    //3)Продолжить вырезать пока buff_dif/num2 - сможет, если такой возможности нету вернуть в результат 0 , если закончился размер num1 и вырезать нечего возвращаем mod.
+
+    while(j<num1->SIZE){
+        if(j==0) {
+            temp_res = cut(num1, j, j + num2->SIZE - 1);
+            j+=num2->SIZE - 1;
+        }
+
+        buff = BigInt_copy(num2);
+        buff->positive = true;
+        while(BigInt_greater_equal(temp_res,buff)){
+            buff = BigInt_plus(buff,num2);
+            i++;
+        }
+        if(i>0) {
+            buff = BigInt_subtr(buff, num2);
+            temp_res = BigInt_subtr(temp_res, buff);
+        }
+
+        if(j+1<num1->SIZE){
+            if(temp_res->num[0]=='0'){
+                temp_res->num[0] = num1->num[j + 1];
+            }else {
+                temp_res->num = rEsize(temp_res->num, temp_res->SIZE + 1);
+                temp_res->num[temp_res->SIZE] = num1->num[j + 1];
+                temp_res->SIZE++;
+            }
+            j++;
+        }else {
+            mod = temp_res;
+            j++;
+        }
+        res->num[inx] = i + '0';
+        inx++;
+        i=0;
+
+
+
+    }
+
+    num1->positive = temp1_positive;
+    num2->positive = temp2_positive;
+
+    return res;
 }
 
 
@@ -430,14 +498,54 @@ int* resize(int* int_res,unsigned int size){
 BigInt* cut(BigInt* main_num,unsigned int inx_l,unsigned int inx_r){
     unsigned int size = inx_r - inx_l;
     BigInt* new_num = malloc(sizeof(BigInt));
-    new_num->num = malloc(sizeof(char)*size);
-    new_num->SIZE = size;
+    new_num->num = malloc(sizeof(char)*(size+1));
+    new_num->SIZE = size + 1;
+    new_num->positive = true;
+
+    for(int i = 0;i<size+1;i++)
+        new_num->num[i] = '0';
 
     int j =0;
     for(int i = inx_l;i<=inx_r;i++){
+        new_num->num[j] = '0';
         new_num->num[j]=main_num->num[i];
         j++;
     }
 
+
     return new_num;
+}
+
+bool BigInt_greater_equal(const BigInt* num1,const BigInt* num2){
+    if(num1->positive==false && num2->positive==true)
+        return false;
+    if(num1->positive==true && num2->positive==false)
+        return true;
+
+
+
+    if(num1->SIZE==num2->SIZE){
+        for(int i =0;i<num1->SIZE;i++) {
+            if (num1->num[i] - '0' > num2->num[i] - '0') {
+                return num1->positive == false?false:true;
+            }
+            if (num1->num[i] - '0' < num2->num[i] - '0') {
+                return num1->positive == false?true:false;
+            }
+        }
+        return true;
+    }
+
+    return num1->SIZE>num2->SIZE? (num1->positive == false?false:true) : (num1->positive == false?true:false);
+}
+
+BigInt* BigInt_copy(const BigInt* num1){
+    BigInt* copy = malloc(sizeof (BigInt));
+    copy->num = malloc(sizeof(char)*num1->SIZE);
+    copy->SIZE = num1->SIZE;
+    copy->positive = num1->positive;
+    for(int i = 0;i<num1->SIZE;i++){
+        copy->num[i] = num1->num[i];
+    }
+    return copy;
 }

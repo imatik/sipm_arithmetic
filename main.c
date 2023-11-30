@@ -18,6 +18,9 @@ int main() {
     BigInt_set_listner(num2,&listner);
 
 
+    BigInt* result4 = BigInt_div(num1,num2);
+    BigInt_display(result4);
+
 /*    BigInt* result = BigInt_plus(num1,num2);
     BigInt_display(result);
 

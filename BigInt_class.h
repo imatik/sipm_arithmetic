@@ -366,9 +366,16 @@ BigInt *BigInt_div(BigInt* num1,    //Делимое
 
     if(num1->SIZE<num2->SIZE){
         BigInt *res = malloc(sizeof (BigInt));
-        res->num = 0;
+        res->num = malloc(sizeof(char));
+        res->num[0] = '0';
         res->SIZE = 1;
         res->positive = num1->positive == num2->positive?true:false;
+
+
+        BigInt* mod_sub = BigInt_subtr(num2,num1);
+        mod->SIZE = mod_sub->SIZE;
+        mod->positive = mod_sub->positive;
+        mod->num = mod_sub->num;
         return res;
     }
 
@@ -428,6 +435,11 @@ BigInt *BigInt_div(BigInt* num1,    //Делимое
 
 
 
+    }
+
+    if(res->num[0] == '0') {
+        for (int i = 0;i<res->SIZE-1;i++)
+            res->num[i] = res->num[i+1];
     }
 
     num1->positive = temp1_positive;

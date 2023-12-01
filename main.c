@@ -17,7 +17,7 @@ int main() {
     BigInt* num2 = create_bigint(name_f2);
     BigInt_set_listner(num2,&listner);
 
-    BigInt *mod = malloc(sizeof(BigInt));
+    BigInt *mod = malloc(sizeof (BigInt));
     mod->SIZE = 0;
     mod->num = 0;
     mod->positive = true;

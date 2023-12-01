@@ -437,10 +437,17 @@ BigInt *BigInt_div(BigInt* num1,    //Делимое
 
     }
 
-    if(res->num[0] == '0') {
-        for (int i = 0;i<res->SIZE-1;i++)
+    int k =0;
+    int size =res->SIZE;
+    while(res->num[k] =='0' && k<size){
+        for(int i = k;i<size-1;i++)
             res->num[i] = res->num[i+1];
+        size--;
+        res->SIZE--;
+        res->num = rEsize(res->num,size);
     }
+
+
 
     num1->positive = temp1_positive;
     num2->positive = temp2_positive;

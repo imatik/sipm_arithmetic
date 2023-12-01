@@ -10,6 +10,7 @@
 BigInt* BigInt_subtr(BigInt* num1,BigInt* num2);
 BigInt* BigInt_plus(BigInt* num1,BigInt* num2);
 BigInt* BigInt_multiplication(BigInt* num1,BigInt* num2);
+BigInt* BigInt_div(BigInt* num1,BigInt* num2,BigInt* mod);
 BigInt* BigInt_max(const BigInt* num1,const BigInt* num2);
 BigInt* BigInt_min(const BigInt* num1,const BigInt* num2);
 BigInt* BigInt_copy(const BigInt* num1);
@@ -29,24 +30,19 @@ BigInt* create_bigint(const char *filename){
 
     BigInt* new_num = malloc(sizeof(BigInt));
     if(new_num == NULL){
-        printf("%s","Не удолось выделить память для числа!\n");
+        printf("%s","Не удалось выделить память для числа!\n");
         return NULL;
     }
-    //printf("%s","Сработал конструктор БигИнта\n");
-
 
     new_num->num = Freader(filename,&new_num->positive,&new_num->SIZE);
-
 
     return new_num;
 }
 
 void BigInt_destruct(BigInt* num){
-    //printf("%s","Сработал деструктор\n");
     free(num->listner);
     free(num->num);
     free(num);
-    num=NULL;
 }
 
 void BigInt_set_listner(BigInt* num,BigInt_event* listner){
@@ -348,7 +344,8 @@ BigInt* BigInt_multiplication(BigInt* num1,BigInt* num2){
 
 
 BigInt *BigInt_div(BigInt* num1,    //Делимое
-                   BigInt* num2     //Делитель
+                   BigInt* num2,    //Делитель
+                   BigInt* mod      //Остаток
                    ){
 
     bool temp1_positive = num1->positive;
@@ -356,6 +353,15 @@ BigInt *BigInt_div(BigInt* num1,    //Делимое
 
     num1->positive = true;
     num2->positive = true;
+
+    if(num2->SIZE==1 &&num2->num[0]=='0'){
+        BigInt *res = malloc(sizeof (BigInt));
+        res->num = malloc(sizeof (char)*8);
+        res->num = "infinity";
+        res->SIZE = 8;
+        res->positive = true;
+        return res;
+    }
 
 
     if(num1->SIZE<num2->SIZE){
@@ -383,8 +389,6 @@ BigInt *BigInt_div(BigInt* num1,    //Делимое
     int i = 0;
     BigInt* temp_res;
     BigInt* buff;
-    BigInt* mod;
-
 
     while(j<num1->SIZE){
         if(j==0) {
@@ -413,7 +417,9 @@ BigInt *BigInt_div(BigInt* num1,    //Делимое
             }
             j++;
         }else {
-            mod = temp_res;
+            mod->SIZE = temp_res->SIZE;
+            mod->positive = temp_res->positive;
+            mod->num = temp_res->num;
             j++;
         }
         res->num[inx] = i + '0';
@@ -522,8 +528,6 @@ bool BigInt_greater_equal(const BigInt* num1,const BigInt* num2){
     if(num1->positive==true && num2->positive==false)
         return true;
 
-
-
     if(num1->SIZE==num2->SIZE){
         for(int i =0;i<num1->SIZE;i++) {
             if (num1->num[i] - '0' > num2->num[i] - '0') {
@@ -544,8 +548,8 @@ BigInt* BigInt_copy(const BigInt* num1){
     copy->num = malloc(sizeof(char)*num1->SIZE);
     copy->SIZE = num1->SIZE;
     copy->positive = num1->positive;
-    for(int i = 0;i<num1->SIZE;i++){
-        copy->num[i] = num1->num[i];
-    }
+        for(int i = 0;i<num1->SIZE;i++){
+            copy->num[i] = num1->num[i];
+        }
     return copy;
 }

@@ -17,9 +17,15 @@ int main() {
     BigInt* num2 = create_bigint(name_f2);
     BigInt_set_listner(num2,&listner);
 
+    BigInt *mod = malloc(sizeof(BigInt));
+    mod->SIZE = 0;
+    mod->num = 0;
+    mod->positive = true;
 
-    BigInt* result4 = BigInt_div(num1,num2);
+
+    BigInt* result4 = BigInt_div(num1,num2,mod);
     BigInt_display(result4);
+    BigInt_display(mod);
 
 /*    BigInt* result = BigInt_plus(num1,num2);
     BigInt_display(result);

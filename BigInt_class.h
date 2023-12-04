@@ -11,6 +11,7 @@ BigInt* BigInt_subtr(BigInt* num1,BigInt* num2);
 BigInt* BigInt_plus(BigInt* num1,BigInt* num2);
 BigInt* BigInt_multiplication(BigInt* num1,BigInt* num2);
 BigInt* BigInt_div(BigInt* num1,BigInt* num2,BigInt* mod);
+BigInt* BigInt_pow(const BigInt* num, const unsigned int power);
 BigInt* BigInt_max(const BigInt* num1,const BigInt* num2);
 BigInt* BigInt_min(const BigInt* num1,const BigInt* num2);
 BigInt* BigInt_copy(const BigInt* num1);
@@ -371,11 +372,9 @@ BigInt *BigInt_div(BigInt* num1,    //Делимое
         res->SIZE = 1;
         res->positive = num1->positive == num2->positive?true:false;
 
-
-        BigInt* mod_sub = BigInt_subtr(num2,num1);
-        mod->SIZE = mod_sub->SIZE;
-        mod->positive = mod_sub->positive;
-        mod->num = mod_sub->num;
+        mod->SIZE = num1->SIZE;
+        mod->positive = num1->positive;
+        mod->num = num1->num;
         return res;
     }
 
@@ -456,6 +455,28 @@ BigInt *BigInt_div(BigInt* num1,    //Делимое
 }
 
 
+BigInt* BigInt_pow(const BigInt* num,const unsigned int power){
+    BigInt* res = BigInt_copy(num);
+    BigInt *pres1 = res;
+    BigInt *pres2;
+
+    if(power == 0){
+        res->SIZE = 1;
+        res->num = rEsize(res->num,1);
+        res->num[0] = '1';
+        return res;
+    }
+
+    for(unsigned int i = 0;i<power-1;i++){
+        pres2 = res;
+        res = BigInt_multiplication(res,num);
+        free(pres2);
+    }
+
+
+
+    return res;
+}
 
 
 

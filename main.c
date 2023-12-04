@@ -22,7 +22,12 @@ int main() {
     mod->num = 0;
     mod->positive = true;
 
-    printf("%b", is_prime(num1));
+
+    BigInt* a = BigInt_rand(20);
+    BigInt_display(a);
+    printf("%b\n",is_prime(a));
+
+
 
 /*    BigInt* result4 = BigInt_div(num1,num2,mod);
     BigInt_display(result4);

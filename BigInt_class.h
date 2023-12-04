@@ -3,6 +3,9 @@
 #include <stdbool.h>
 #include "event_class.h"
 #include "fileworker.h"
+#include <stdlib.h>
+#include <pthread.h>
+#include <time.h>
 #define MIN(a,b) ((a)<(b)) ? (a) : (b)
 #define MAX(a,b) ((a)>(b)) ? (a) : (b)
 
@@ -20,6 +23,7 @@ bool BigInt_greater_equal(const BigInt* num1,const BigInt* num2);
 BigInt* BigInt_copy_int(int i_num);
 void BigInt_display(const BigInt* num);
 int* resize(int* int_res,unsigned int size);
+void* search_up(BigInt* num);
 BigInt* cut(BigInt* main_num,unsigned int inx_l,unsigned int inx_r);
 
 typedef struct class_BigInt{
@@ -481,9 +485,12 @@ BigInt* BigInt_pow(const BigInt* num,const unsigned int power){
 }
 
 
+
+
+
 bool is_prime(BigInt* num){
-    if(BigInt_greater_equal(BigInt_copy_int(1),num)) false;
-    if(BigInt_greater_equal(BigInt_copy_int(3),num)) true;
+    if(BigInt_greater_equal(BigInt_copy_int(1),num)) return false;
+    if(BigInt_greater_equal(BigInt_copy_int(3),num)) return true;
 
     BigInt* mod1 = BigInt_copy_int(0);
     BigInt* mod2 = BigInt_copy_int(0);
@@ -507,6 +514,42 @@ bool is_prime(BigInt* num){
     }
     return true;
 }
+
+
+BigInt* BigInt_rand(const unsigned int size){
+    BigInt* res = malloc(sizeof(BigInt));
+    res->num = malloc(sizeof(char)*size);
+    res->positive = true;
+    res->SIZE = size;
+
+    srand(time(0));
+
+    res->num[0] = (rand() % 9 + 1) + '0';
+    for (unsigned int i = 1; i < size; i++) {
+        res->num[i] = (rand() % 10) + '0';
+    }
+
+    unsigned int temp_s = res->SIZE;
+    BigInt *copy_res1 = BigInt_copy(res);
+
+    while(!is_prime(res)){
+        if(res->SIZE>temp_s) break;
+        res = BigInt_plus(res, BigInt_copy_int(1));
+    }
+    if(is_prime(res))
+        return res;
+    else
+        res = BigInt_subtr(res,BigInt_copy_int(1));
+
+
+    while(!is_prime(copy_res1)){
+        if(copy_res1->SIZE<temp_s) break;
+        copy_res1 = BigInt_subtr(copy_res1, BigInt_copy_int(1));
+    }
+
+    return copy_res1;
+}
+
 
 
 bool BigInt_equal(const BigInt* num1,const BigInt* num2){

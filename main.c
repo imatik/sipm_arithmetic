@@ -22,14 +22,13 @@ int main() {
     mod->num = 0;
     mod->positive = true;
 
-    BigInt* result = BigInt_pow(num1,3);
-    BigInt_display(result);
+    printf("%b", is_prime(num1));
 
 /*    BigInt* result4 = BigInt_div(num1,num2,mod);
     BigInt_display(result4);
-    BigInt_display(mod);
+    BigInt_display(mod);*/
 
-    BigInt* result = BigInt_plus(num1,num2);
+/*    BigInt* result = BigInt_plus(num1,num2);
     BigInt_display(result);
 
     BigInt* result2 = BigInt_subtr(num1,num2);

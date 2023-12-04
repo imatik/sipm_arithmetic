@@ -12,10 +12,12 @@ BigInt* BigInt_plus(BigInt* num1,BigInt* num2);
 BigInt* BigInt_multiplication(BigInt* num1,BigInt* num2);
 BigInt* BigInt_div(BigInt* num1,BigInt* num2,BigInt* mod);
 BigInt* BigInt_pow(const BigInt* num, const unsigned int power);
+bool BigInt_equal(const BigInt* num1,const BigInt* num2);
 BigInt* BigInt_max(const BigInt* num1,const BigInt* num2);
 BigInt* BigInt_min(const BigInt* num1,const BigInt* num2);
 BigInt* BigInt_copy(const BigInt* num1);
 bool BigInt_greater_equal(const BigInt* num1,const BigInt* num2);
+BigInt* BigInt_copy_int(int i_num);
 void BigInt_display(const BigInt* num);
 int* resize(int* int_res,unsigned int size);
 BigInt* cut(BigInt* main_num,unsigned int inx_l,unsigned int inx_r);
@@ -479,7 +481,45 @@ BigInt* BigInt_pow(const BigInt* num,const unsigned int power){
 }
 
 
+bool is_prime(BigInt* num){
+    if(BigInt_greater_equal(BigInt_copy_int(1),num)) false;
+    if(BigInt_greater_equal(BigInt_copy_int(3),num)) true;
 
+    BigInt* mod1 = BigInt_copy_int(0);
+    BigInt* mod2 = BigInt_copy_int(0);
+
+    BigInt_div(num,BigInt_copy_int(2),mod1);
+    BigInt_div(num,BigInt_copy_int(3),mod2);
+
+    if( (BigInt_equal(mod1,BigInt_copy_int(0))) || (BigInt_equal(mod2, BigInt_copy_int(0))) ) return false;
+
+    BigInt* i = BigInt_copy_int(5);
+
+
+    while(BigInt_greater_equal(num, BigInt_multiplication(i,i))){
+
+        BigInt_div(num,BigInt_copy(i),mod1);
+        BigInt_div(num, BigInt_plus(BigInt_copy(i), BigInt_copy_int(2)),mod2);
+
+        if( (BigInt_equal(mod1, BigInt_copy_int(0))) || (BigInt_equal(mod2, BigInt_copy_int(0))) ) return false;
+
+        i = BigInt_plus(i, BigInt_copy_int(6));
+    }
+    return true;
+}
+
+
+bool BigInt_equal(const BigInt* num1,const BigInt* num2){
+    if(num1->SIZE != num2->SIZE)
+        return false;
+
+    for(unsigned int i = 0;i<num1->SIZE;i++){
+        if(num1->num[i] != num2->num[i])
+            return false;
+    }
+    return true;
+
+}
 
 BigInt* BigInt_max(const BigInt* num1,const BigInt* num2){
     int numer1;
@@ -591,5 +631,15 @@ BigInt* BigInt_copy(const BigInt* num1){
         for(int i = 0;i<num1->SIZE;i++){
             copy->num[i] = num1->num[i];
         }
+    return copy;
+}
+
+BigInt* BigInt_copy_int(int i_num){
+    BigInt* copy = malloc(sizeof (BigInt));
+    copy->SIZE =1;
+    copy->num = malloc(sizeof (char));
+    copy->num[0] = i_num + '0';
+    copy->positive = true;
+
     return copy;
 }

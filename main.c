@@ -24,16 +24,16 @@ int main() {
 
     gettimeofday(&end_read, NULL);
 
-    printf("%b", is_prime(num1));
+    printf("%b\n", is_prime(num1));
 
     gettimeofday(&end, NULL);
 
     cpu_time_used = (end_read.tv_sec - start.tv_sec) * 1000000 + (end_read.tv_usec - start.tv_usec);
-    printf("Время подкрузки файла : %d секунд\n",cpu_time_used);
+    printf("Время подкрузки файла : %d мкс\n",cpu_time_used);
     cpu_time_used = (end.tv_sec - end_read.tv_sec) * 1000000 + (end.tv_usec - end_read.tv_usec);
-    printf("Время проверки : %d секунд\n",cpu_time_used);
+    printf("Время проверки : %d мкс\n",cpu_time_used);
     cpu_time_used = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_usec - start.tv_usec);
-    printf("Всё время работы : %d секунд\n",cpu_time_used);
+    printf("Всё время работы : %d мкс\n",cpu_time_used);
 
 /*    BigInt* num2 = create_bigint(name_f2);
     BigInt_set_listner(num2,&listner);

@@ -12,7 +12,7 @@
 
 BigInt* BigInt_subtr(BigInt* num1,BigInt* num2);
 BigInt* BigInt_plus(BigInt* num1,BigInt* num2);
-BigInt* BigInt_multiplication(BigInt* num1,BigInt* num2);
+BigInt* BigInt_multiplication(const BigInt* num1,const BigInt* num2);
 BigInt* BigInt_div(BigInt* num1,BigInt* num2,BigInt* mod);
 BigInt* BigInt_pow(const BigInt* num, const unsigned int power);
 bool BigInt_equal(const BigInt* num1,const BigInt* num2);
@@ -24,7 +24,7 @@ BigInt* BigInt_copy_int(int i_num);
 void BigInt_display(const BigInt* num);
 int* resize(int* int_res,unsigned int size);
 void* search_up(BigInt* num);
-BigInt* cut(BigInt* main_num,unsigned int inx_l,unsigned int inx_r);
+BigInt* cut(const BigInt* main_num,const unsigned int inx_l,const unsigned int inx_r);
 
 typedef struct class_BigInt{
     unsigned int SIZE;
@@ -146,6 +146,10 @@ BigInt* BigInt_plus(BigInt* num1,BigInt* num2){
 
     BigInt_int_to_char(int_res,res);
 
+    free(int_res);
+    free(i_MAX_NUM);
+    free(i_MIN_NUM);
+
     return res;
 }
 
@@ -205,6 +209,9 @@ BigInt* BigInt_subtr(BigInt* num1,BigInt* num2){
             res->positive = true;
         }
 
+        free(i_MAX_NUM);
+        free(i_MIN_NUM);
+
         return res;
     }
 
@@ -248,6 +255,9 @@ BigInt* BigInt_subtr(BigInt* num1,BigInt* num2){
             res->positive = false;
         }
 
+        free(i_MAX_NUM);
+        free(i_MIN_NUM);
+
         return res;
     }
 
@@ -274,7 +284,6 @@ BigInt* BigInt_subtr(BigInt* num1,BigInt* num2){
         }
 
 
-
         res->SIZE = BigInt_max(num1,num2)->SIZE;
 
         for(int i =1;i_MAX_NUM[num1->SIZE - i] ==0;i++) {
@@ -294,13 +303,16 @@ BigInt* BigInt_subtr(BigInt* num1,BigInt* num2){
         }
 
 
+        free(i_MAX_NUM);
+        free(i_MIN_NUM);
+
         return res;
     }
 
 }
 
 
-BigInt* BigInt_multiplication(BigInt* num1,BigInt* num2){
+BigInt* BigInt_multiplication(const BigInt* num1,const BigInt* num2){
     int* i_MAX_NUM = (num1->SIZE > num2->SIZE) ? BigInt_char_to_int(num1):BigInt_char_to_int(num2);
     int* i_MIN_NUM = (num2->SIZE < num1->SIZE) ? BigInt_char_to_int(num2):BigInt_char_to_int(num1);
 
@@ -346,6 +358,11 @@ BigInt* BigInt_multiplication(BigInt* num1,BigInt* num2){
 
     int_res = resize(int_res,res->SIZE);
     BigInt_int_to_char(int_res,res);
+
+    free(i_MAX_NUM);
+    free(i_MIN_NUM);
+    free(int_res);
+
     return res;
 }
 
@@ -457,13 +474,15 @@ BigInt *BigInt_div(BigInt* num1,    //Делимое
     num1->positive = temp1_positive;
     num2->positive = temp2_positive;
 
+    free(temp_res);
+    free(buff);
+
     return res;
 }
 
 
 BigInt* BigInt_pow(const BigInt* num,const unsigned int power){
     BigInt* res = BigInt_copy(num);
-    BigInt *pres1 = res;
     BigInt *pres2;
 
     if(power == 0){
@@ -478,8 +497,6 @@ BigInt* BigInt_pow(const BigInt* num,const unsigned int power){
         res = BigInt_multiplication(res,num);
         free(pres2);
     }
-
-
 
     return res;
 }
@@ -512,6 +529,10 @@ bool is_prime(BigInt* num){
 
         i = BigInt_plus(i, BigInt_copy_int(6));
     }
+
+    free(mod1);
+    free(mod2);
+    free(i);
     return true;
 }
 
@@ -621,10 +642,12 @@ int* resize(int* int_res,unsigned int size){
     for(int i = 0; i< size;i++)
         new_res[i] = int_res[i];
 
+    free(int_res);
+
     return new_res;
 }
 
-BigInt* cut(BigInt* main_num,unsigned int inx_l,unsigned int inx_r){
+BigInt* cut(const BigInt* main_num,const unsigned int inx_l,const unsigned int inx_r){
     unsigned int size = inx_r - inx_l;
     BigInt* new_num = malloc(sizeof(BigInt));
     new_num->num = malloc(sizeof(char)*(size+1));
